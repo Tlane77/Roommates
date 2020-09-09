@@ -14,4 +14,8 @@ namespace Roommates.Models
         public string Name { get; set; }
         public int MaxOccupancy { get; set; }
     }
+
+
+
 }
+

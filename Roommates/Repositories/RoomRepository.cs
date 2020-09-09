@@ -108,7 +108,7 @@ namespace Roommates.Repositories
                         {
                             Id = id,
                             Name = reader.GetString(reader.GetOrdinal("Name")),
-                            MaxOccupancy = reader.GetInt32(reader.GetOrdinal("MaxOccupancy")),
+                            MaxOccupancy = reader.GetInt32(reader.GetOrdinal("MaxOccupancy")),//Pretty much always use Int32 for short, Int64 for long..
                         };
                     }
 
@@ -143,10 +143,62 @@ namespace Roommates.Repositories
 
                     room.Id = id;
                 }
+
+
+
             }
 
             // when this method is finished we can look in the database and see the new room.
+
+
         }
 
-    }
-}
+        // <summary>
+        ///  Updates the room
+        /// </summary>
+        public void Update(Room room)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    //Creating a new command
+                    cmd.CommandText = @"UPDATE Room
+                                    SET Name = @name,
+                                        MaxOccupancy = @maxOccupancy
+                                    WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@name", room.Name);
+                    cmd.Parameters.AddWithValue("@maxOccupancy", room.MaxOccupancy);
+                    cmd.Parameters.AddWithValue("@id", room.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+                /// <summary>
+                ///  Delete the room with the given id
+                /// </summary>
+                public void Delete(int id)
+                {
+                    using (SqlConnection conn = Connection)
+                    {
+                        conn.Open();
+                        using (SqlCommand cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandText = "DELETE FROM Room WHERE Id = @id";
+                            cmd.Parameters.AddWithValue("@id", id);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+    
+
+
